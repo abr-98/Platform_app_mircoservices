@@ -1,0 +1,27 @@
+FROM python:3.10
+
+
+RUN mkdir /app
+COPY requirements.txt /app
+COPY appsettings.json /app
+RUN mkdir /app/Utility_Module
+COPY Utility_Module/ /app/Utility_Module/
+RUN mkdir /app/GroupServices
+COPY GroupServices/ /app/GroupServices/
+RUN mkdir /app/ParticipantServices
+COPY ParticipantServices/ /app/ParticipantServices/
+RUN mv /app/ParticipantServices/app.py /app
+
+WORKDIR /app
+
+RUN pip install --upgrade pip
+RUN pip install -r requirements.txt
+
+ENV FLASK_APP=app.py
+ENV FLASK_RUN_HOST=0.0.0.0
+ENV FLASK_RUN_PORT=5000
+
+EXPOSE 5000
+
+CMD ["flask","run"]
+
