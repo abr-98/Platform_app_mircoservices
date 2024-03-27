@@ -1,5 +1,7 @@
+from elasticsearch import Elasticsearch
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from Utility_Module.Elastic.Elastic import Elastic
 from Utility_Module.Postgres.DatabaseConnectionSetter import DatabaseConnectionSetter
 
 class CreateAppInstance:
@@ -7,6 +9,7 @@ class CreateAppInstance:
     def __init__(self) -> None:
          self.app = None
          self.db = None
+         self.elastic = None
              
     def createApp(self):
         self.app = Flask(__name__)
@@ -16,6 +19,7 @@ class CreateAppInstance:
         self.app.config["SESSION_TYPE"] = "filesystem"
         self.app.config['SECRET_KEY'] = "b'_5#y278sajnc\sdb*7sbc'"
         self.db = SQLAlchemy()
+        self.elastic = Elasticsearch(Elastic.get_elastic_settings(),request_timeout=30)
         self.db.init_app(self.app)
 
         
@@ -25,6 +29,9 @@ class CreateAppInstance:
     
     def get_db(self) -> SQLAlchemy:
         return self.db
+    
+    def get_elastic(self) -> Elasticsearch:
+        return self.elastic
 
 
 class CreateAppInstanceSingleton:

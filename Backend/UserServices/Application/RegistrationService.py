@@ -1,5 +1,6 @@
 import random
-from flask import request
+from Utility_Module.Elastic.Infrastructure.Entities import Entities
+from Utility_Module.Elastic.Infrastructure.EntitiesHandler import EntitiesHandler
 from UserServices.Core.User import User
 from UserServices.Core.UserExceptions import UserException
 from UserServices.Core.UserResult import UserResult
@@ -15,6 +16,7 @@ class RegistrationServices:
     def __init__(self):
         self.UserRepository = UserRepository()
         self.Mailer = MailServiceInfraSingleton.GetInstance()
+        self.ElasticEntityHandler = EntitiesHandler()
         
     def Persist(self, user: User) -> UserResult:
         try:
@@ -28,6 +30,7 @@ class RegistrationServices:
             except Exception as e:
                 raise MailException.WhenMailDispatchFails(e)
             user.updateValue("Password", otp)    
+            self.ElasticEntityHandler.store_entity(Entities.From(user.UserId, user.Name, "", "Person"))
             self.UserRepository.save(user)
             return UserResult.WhenUserIsCreated(user.UserId, user.Name)
         except Exception as e:

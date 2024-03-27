@@ -1,13 +1,9 @@
-from flask import session
 from Utility_Module.CheckLoginStatus.StatusException import StatusException
-from Utility_Module.JWTHandler.JWTHandler import JWTgenerator
-from Utility_Module.Mailer.MailExceptions import MailException
 from UserServices.Core.UserExceptions import UserException
 from UserServices.Core.User import User
-import random
 from UserServices.Core.UserResult import UserResult
-from Utility_Module.Mailer.MailerServices import MailServiceInfraSingleton
 from UserServices.Infrastructure.UserRepository import UserRepository
+from Utility_Module.Elastic.Infrastructure.EntitiesHandler import EntitiesHandler
 from Utility_Module.JWTHandler import JWTHandler
 from Utility_Module.CheckLoginStatus.StatusRequests import StatusRequests
 
@@ -15,6 +11,7 @@ class UserServices:
     
     def __init__(self):
         self.UserRepository = UserRepository()
+        self.ElasticEntityHandler = EntitiesHandler()
     
     def Update(self, field, value, token_in, IP) -> UserResult:
         try:
@@ -23,7 +20,6 @@ class UserServices:
             return UserResult.WhenUserFieldIsUpdated(userId, field)
         except Exception as e:
             return UserResult.WhenUserOperationsAreDeniedWithErrors(e)
-
     def Fetch(self,token_in, IP) -> UserResult:
         try:
             userId = self.check_login_and_token(token_in, IP)
@@ -38,6 +34,7 @@ class UserServices:
         try:
             userId = self.check_login_and_token(token_in, IP)
             self.UserRepository.delete(userId)
+            self.ElasticEntityHandler.delete_entity(userId)
             return UserResult.WhenUserIsDeleted(userId)
         except Exception as e:
             return UserResult.WhenUserOperationsAreDeniedWithErrors(e)

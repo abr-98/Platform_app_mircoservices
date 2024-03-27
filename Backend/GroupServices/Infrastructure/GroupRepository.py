@@ -17,7 +17,7 @@ class GroupDataRepository:
     def fetch(self, groupId: str) -> Group:
         try:
             data: Group = Group.query.filter_by(GroupId = groupId).first()
-            if(data == None):
+            if data == None:
                 return None
             return data
         except Exception as e:

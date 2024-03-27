@@ -1,9 +1,11 @@
+from Utility_Module.Elastic.Infrastructure.Entities import Entities
 from GroupServices.Core.GroupException import GroupException
 from GroupServices.Core.Group import Group
 from GroupServices.Core.GroupResult import GroupResult
 from ParticipantServices.Core.Participant import Participant, POSSIBLE_STATUSES
 from GroupServices.Infrastructure.GroupRepository import GroupDataRepository
 from ParticipantServices.Infrastructure.ParticipantRepository import ParticipantsDataRepository
+from Utility_Module.Elastic.Infrastructure.EntitiesHandler import EntitiesHandler
 from Utility_Module.JWTHandler import JWTHandler
 from Utility_Module.CheckLoginStatus.StatusException import StatusException
 from Utility_Module.CheckLoginStatus.StatusRequests import StatusRequests
@@ -15,15 +17,17 @@ class GroupServices:
     def __init__(self):
         self.GroupRepository = GroupDataRepository()
         self.ParticipantRepository = ParticipantsDataRepository()
+        self.ElasticEntityHandler = EntitiesHandler()
         
     def Create(self, group,token_in: str, IP: str) -> GroupResult:
         try:
             userId = self.check_login_and_token(token_in, IP)
             group["UserId"] = userId
-            data = json.loads(str(group).replace("'",'"'), object_hook= Group.from_json)
-            data: Group = self.GroupRepository.fetch(group.GroupId)
-            if(data!= None):
+            group = json.loads(str(group).replace("'",'"'), object_hook= Group.from_json)
+            if self.GroupRepository.fetch(group.GroupId) != None:
                 return GroupResult.WhenGroupRequirementsFails(GroupException.WhenGroupAlreadyExists(group.GroupId))
+            data = self.GroupRepository.fetch(group.GroupId)
+            self.ElasticEntityHandler.store_entity(Entities.From(data.GroupId, data.GroupName, "", "Group"))
             self.GroupRepository.save(group)
             self.ParticipantRepository.save(Participant(group.Admin, group.GroupId, POSSIBLE_STATUSES.Member.value))
             return GroupResult.WhenGroupIsCreated(group.GroupId, group.GroupName)
@@ -57,6 +61,7 @@ class GroupServices:
             data: Group = self.GroupRepository.fetch(groupId)
             if not self.__isGroupAdmin__(data, userId):
                 return GroupResult.WhenGroupRequirementsFails(GroupException.NonGroupAdminsMakeChanges())
+            self.ElasticEntityHandler.delete_entity(userId)
             self.GroupRepository.delete(groupId)
             return GroupResult.WhenGroupIsDeleted(groupId)
         except Exception as e:
