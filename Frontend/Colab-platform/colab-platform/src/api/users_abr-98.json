@@ -1,0 +1,11 @@
+{
+    "userId": "abr-98",
+    "userName":"abhijit",
+    "email": "abc@gmail.com",
+    "phoneNo":"+91 123",
+    "DateOfJoining":"12.12.2012",
+    "Location": "xyz",
+    "About":"I am abc",
+    "Interest":"abc, xyz",
+    "ProfileImage": "assets/images/empty_profile.jpg"
+}

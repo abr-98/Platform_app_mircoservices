@@ -1,0 +1,30 @@
+<html>
+    <div class = "card-body">
+        <h2 class = "card-subtitle">Profile</h2>
+    </div>
+
+    <div class = "profile-div">
+
+        <div class="profile-image-div">
+            <img src={{user?.ProfileImage}} alt="profile-image-placeholder" class="profile-image">
+        </div>
+
+        <div class = "profile-details-div" *ngIf='user'>
+            <h3 class = "profile-title">{{user.userName}}</h3>
+            <p class="profile-details">UserId: {{user.userId}}</p>
+            <p class="profile-details">Location: {{user.Location}}</p>
+            <p class="profile-details">email: {{user.email}}</p>
+            <p class="profile-details">phoneNo: {{user.phoneNo}}</p>
+            <p class="profile-details">Joining Date: {{user.DateOfJoining}}</p>
+            <p class="profile-details">Interests: {{user.Interests}}</p>
+            <p class="profile-details">About: {{user.About}}</p>
+        </div>
+    </div>
+
+
+    <div class="card-footer"> 
+        <h6 class = "card-subtitle" style="font-size:larger">Developed By:</h6>
+        <h6 class = "card-subtitle" style="font-size:larger"> Abhijit Roy</h6>
+        <a href="https://www.linkedin.com/in/abhijit-roy-57a7b1169/">Connect</a>
+    </div>
+</html>

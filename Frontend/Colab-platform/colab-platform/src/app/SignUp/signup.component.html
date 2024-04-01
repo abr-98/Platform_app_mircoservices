@@ -1,0 +1,34 @@
+<html>
+    <div class = "card-body">
+        <h2 class = "card-subtitle">Sign Up</h2>
+    </div>
+
+    <div class = container-box>
+        <div class="form-group">
+            <input type="text" class="form-control" id="UserId"
+                   required
+                   [(ngModel)]="user.userId" name="UserId" placeholder="UserId">
+            <input type="text" class="form-control" id="UserName"
+                   required
+                   [(ngModel)]="user.userName" name="UserName" placeholder="UserName">
+            <input type="text" class="form-control" id="Email"
+                   required
+                   [(ngModel)]="user.email" name="Email" placeholder="Email">
+            <input type="text" class="form-control" id="PhoneNo"
+                   required
+                   [(ngModel)]="user.phoneNo" name="PhoneNo" placeholder="PhoneNo">
+            <input type="text" class="form-control-scroll" id="About" 
+                   required
+                   [(ngModel)]="user.About" name="About" placeholder="Something about you">   
+            <input type="text" class="form-control" id="Location"
+                   required
+                   [(ngModel)]="user.Location" name="Location" placeholder="Location">   
+          </div>
+    </div>
+
+    <div class="card-footer"> 
+        <h6 class = "card-subtitle" style="font-size:larger">Developed By:</h6>
+        <h6 class = "card-subtitle" style="font-size:larger"> Abhijit Roy</h6>
+        <a href="https://www.linkedin.com/in/abhijit-roy-57a7b1169/">Connect</a>
+    </div>
+</html>

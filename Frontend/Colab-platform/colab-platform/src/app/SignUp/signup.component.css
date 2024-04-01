@@ -1,0 +1,32 @@
+.container-box
+{
+    align-content: center;
+    border: 0.2rem solid white;
+    width: fit-content;
+    height: fit-content;
+    position: relative;
+    left: 18%;
+    top: 50%;
+}
+
+.form-group
+{
+    height: auto;
+    margin: 0 auto;
+    padding: 10px;
+}
+
+.form-control
+{
+    margin: 1cm;
+    text-align: center;
+    width: 10cm;
+}
+
+.form-control-scroll
+{
+    margin: 1cm;
+    text-align: center;
+    width: 10cm;
+    height: 2cm;
+}

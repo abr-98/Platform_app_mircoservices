@@ -1,0 +1,11 @@
+.card-text{
+    color: azure;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: large;
+}
+
+.container{
+    text-align: center;
+    border-width: 3cm;
+    border-color: aliceblue;
+}

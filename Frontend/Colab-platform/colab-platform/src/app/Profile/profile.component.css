@@ -1,0 +1,43 @@
+.profile-div 
+{
+    text-align: center;
+    border: 1px solid white;
+    height: fit-content;
+
+}
+.profile-image-div
+{
+   float: left;
+    border: 1px solid skyblue;
+    padding: 1rem 1rem;
+    width: fit-content;
+}
+.profile-image
+{
+    width: 120px;
+    height: 120px; 
+    margin-top: 5%;
+}
+
+.profile-title
+{
+    height: fit-content
+}
+
+.profile-details
+{
+    text-align: left;
+    margin-left: 7cm;
+    margin-top: 1cm;
+    height: fit-content;
+    line-height: normal;
+    margin-bottom: 1cm;
+}
+
+
+.profile-details-div
+{
+    margin-top: 1cm;
+    color: white;
+    text-align: center;
+}
