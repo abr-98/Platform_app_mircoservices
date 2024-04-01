@@ -22,6 +22,7 @@ class UserRepository:
                 raise UserException.WhenUserDoesnotExist()
             data.updateValue(field, value)
             db.session.commit()
+            return data
         except Exception as e:
             if e.__class__.__base__ != UserException:
                 raise UserException.WhenUserUpdationFails(e)

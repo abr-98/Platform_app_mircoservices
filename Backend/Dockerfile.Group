@@ -1,18 +1,16 @@
 FROM python:3.10
 
-
-RUN mkdir /app
-COPY requirements.txt /app
-COPY appsettings.json /app
-RUN mkdir /app/Utility_Module
-COPY Utility_Module/ /app/Utility_Module/
-RUN mkdir /app/GroupServices
-COPY GroupServices/ /app/GroupServices/
-RUN mkdir /app/ParticipantServices
-COPY ParticipantServices/ /app/ParticipantServices/
-RUN mv /app/GroupServices/app.py /app
-
 WORKDIR /app
+
+RUN mkdir /app/GroupServices
+COPY /GroupServices/ /app/GroupServices/
+RUN mkdir /app/ParticipantServices
+COPY /ParticipantServices/ /app/ParticipantServices/
+RUN mkdir /app/Utility_Module
+COPY /Utility_Module/ /app/Utility_Module/
+RUN mv /app/GroupServices/requirements.txt /app
+RUN mv /app/GroupServices/appsettings.json /app
+RUN mv /app/GroupServices/app.py /app
 
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt

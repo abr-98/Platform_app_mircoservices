@@ -30,6 +30,7 @@ class GroupDataRepository:
                 raise GroupException.WhenGroupDoesNotExist(groupId)
             data.updateInterests(interest)
             db.session.commit()
+            return data
         except Exception as e:
             if e.__class__.__base__ != GroupException:
                 raise GroupException.WhenGroupUpdationFailed(e)

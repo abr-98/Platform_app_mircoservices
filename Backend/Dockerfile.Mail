@@ -1,0 +1,13 @@
+FROM python:3.10
+
+WORKDIR /app
+RUN mkdir /app/MailServices
+COPY /MailServices/ /app/MailServices/
+RUN mv /app/MailServices/requirements.txt /app
+RUN mv /app/MailServices/appsettings.json /app
+RUN mv /app/MailServices/launcher.py /app
+
+RUN pip install --upgrade pip
+RUN pip install -r requirements.txt
+
+CMD ["python3","launcher.py"]

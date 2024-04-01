@@ -105,7 +105,7 @@ class ParticipantController:
             
     def GetTokenFromHeader(bearer:str):
         if bearer is None:
-            token = "Bearer 123"
+            bearer = "Bearer 123"
         token = bearer.split(' ')[1]
         return token
         

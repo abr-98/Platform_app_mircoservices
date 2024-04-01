@@ -1,4 +1,4 @@
-from Utility_Module.Elastic.Infrastructure.Entities import Entities
+from SearchServices.Elastic.Infrastructure.Entities import Entities
 
 
 class SearchResult:

@@ -1,22 +1,30 @@
+import logging
 import random
-from Utility_Module.Elastic.Infrastructure.Entities import Entities
-from Utility_Module.Elastic.Infrastructure.EntitiesHandler import EntitiesHandler
 from UserServices.Core.User import User
 from UserServices.Core.UserExceptions import UserException
 from UserServices.Core.UserResult import UserResult
+from UserServices.Infrastructure.Entites import Entities
+from UserServices.Infrastructure.Mail import Mail
 from UserServices.Infrastructure.UserRepository import UserRepository
+from UserServices.MailEventProducer import MailEventProducer
+from UserServices.SearchEntityProducer import SearchEntityProducer
 from Utility_Module.CheckLoginStatus.StatusRequests import StatusRequests
+from Utility_Module.CreateApp import CreateAppInstance, CreateAppInstanceSingleton
 from Utility_Module.JWTHandler.JWTHandler import JWTgenerator
-from Utility_Module.Mailer.MailExceptions import MailException
-from Utility_Module.Mailer.MailerServices import MailServiceInfraSingleton
+
+app_creater : CreateAppInstance= CreateAppInstanceSingleton.GetInstance()
+logger : logging.Logger = app_creater.get_logger()
+
+mq_elastic = SearchEntityProducer(logger)
+mq_elastic.setup()
+mq_mail = MailEventProducer(logger)
+mq_mail.setup()
 
 
 class RegistrationServices:
     
     def __init__(self):
         self.UserRepository = UserRepository()
-        self.Mailer = MailServiceInfraSingleton.GetInstance()
-        self.ElasticEntityHandler = EntitiesHandler()
         
     def Persist(self, user: User) -> UserResult:
         try:
@@ -25,12 +33,9 @@ class RegistrationServices:
                 return UserResult.WhenUserOperationsAreDeniedWithErrors(UserException.WhenUserAlreadyExists())
             otp: str = self.CreateOTP()
             message, subject =self.CreateSetPasswordMessage(otp, user.UserId)
-            try:
-                self.Mailer.SendMail(user.Email,message, subject)
-            except Exception as e:
-                raise MailException.WhenMailDispatchFails(e)
+            mq_mail.publish("mail_requested", Mail(user.Email,message, subject))
             user.updateValue("Password", otp)    
-            self.ElasticEntityHandler.store_entity(Entities.From(user.UserId, user.Name, "", "Person"))
+            mq_elastic.publish("add_request", Entities.From(user.UserId, user.Name, "", "Person"))
             self.UserRepository.save(user)
             return UserResult.WhenUserIsCreated(user.UserId, user.Name)
         except Exception as e:
@@ -60,10 +65,7 @@ class RegistrationServices:
                 return UserResult.WhenUserOperationsAreDeniedWithErrors(UserException.WhenUserDoesnotExist())
             otp: str = self.CreateOTP()
             message, subject =self.CreateSetPasswordMessage(otp, data.UserId)
-            try:
-                self.Mailer.SendMail(userEmail,message, subject)
-            except Exception as e:
-                raise MailException.WhenMailDispatchFails(e)
+            mq_mail.publish("mail_requested", Mail(userEmail, message, subject))
             self.UserRepository.update("Password", otp, data.UserId)
             return UserResult.WhenUserIsRecovered(data.UserId)
         except Exception as e:

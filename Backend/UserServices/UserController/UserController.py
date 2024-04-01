@@ -58,7 +58,7 @@ class UserController:
         token = UserController.GetTokenFromHeader(bearer)
         result: UserResult = UserController.userService.Logout(token, ip)
         return_state, status = UserController.Convert_result_to_code(result)
-        return jsonify(message = return_state, status = 200)  
+        return jsonify(message = return_state, status = status)  
             
     def Convert_result_to_code(result:UserResult):
         if result.__class__ == UserOperationDenied:
@@ -69,7 +69,7 @@ class UserController:
         
     def GetTokenFromHeader(bearer:str):
         if bearer is None:
-            token = "Bearer 123"
+            bearer = "Bearer 123"
         token = bearer.split(' ')[1]
         return token
             

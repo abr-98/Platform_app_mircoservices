@@ -1,0 +1,19 @@
+FROM python:3.10
+
+WORKDIR /app
+
+RUN mkdir /app/SearchServices
+COPY /SearchServices/ /app/SearchServices/
+RUN mkdir /app/Utility_Module
+COPY /Utility_Module/ /app/Utility_Module/
+RUN mv /app/SearchServices/requirements.txt /app
+RUN mv /app/SearchServices/appsettings.json /app
+RUN mv /app/SearchServices/consumer_launcher.py /app
+
+RUN pip install --upgrade pip
+RUN pip install -r requirements.txt
+
+EXPOSE 5000
+
+CMD ["python3","consumer_launcher.py"]
+

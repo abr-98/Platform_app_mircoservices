@@ -2,6 +2,7 @@ from Utility_Module.CreateApp import CreateAppInstanceSingleton, CreateAppInstan
 from flask_cors import CORS
 from ParticipantServices.ParticipantController.ParticipantController import app_file_participant
 
+
 app_creator: CreateAppInstance = CreateAppInstanceSingleton.GetInstance()
 app = app_creator.get_app()
 db = app_creator.get_db()

@@ -1,16 +1,14 @@
 FROM python:3.10
 
-
-RUN mkdir /app
-COPY requirements.txt /app
-COPY appsettings.json /app
-RUN mkdir /app/Utility_Module
-COPY Utility_Module/ /app/Utility_Module/
-RUN mkdir /app/Status_Maintainance_Services
-COPY Status_Maintainance_Services/ /app/Status_Maintainance_Services/
-RUN mv /app/Status_Maintainance_Services/app.py /app
-
 WORKDIR /app
+
+RUN mkdir /app/Status_Maintainance_Services
+COPY /Status_Maintainance_Services/ /app/Status_Maintainance_Services/
+RUN mkdir /app/Utility_Module
+COPY /Utility_Module/ /app/Utility_Module/
+RUN mv /app/Status_Maintainance_Services/requirements.txt /app
+RUN mv /app/Status_Maintainance_Services/appsettings.json /app
+RUN mv /app/Status_Maintainance_Services/app.py /app
 
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt

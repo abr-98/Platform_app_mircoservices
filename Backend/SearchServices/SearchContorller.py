@@ -1,10 +1,9 @@
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, request
 from flask_cors import cross_origin
 
 from SearchServices.SearchResults import *
 from SearchServices.SearchService import SearchService
-from Utility_Module.Elastic.Infrastructure.EntityException import *
-
+from SearchServices.Elastic.Infrastructure.EntityException import *
 
 app_file_search =Blueprint("Search",__name__)
 
@@ -20,9 +19,19 @@ class SearchController:
     @cross_origin
     @app_file_search.route("/Search/<value>", methods = ['POST'])
     def create_group(value):
-        result:SearchResult = SearchController.searchServices.search(value)
+        ip = request.remote_addr
+        bearer = request.headers.get('Authorization')
+        token = SearchController.GetTokenFromHeader(bearer)
+        result:SearchResult = SearchController.searchServices.search(value, token, ip)
         return_state, status = SearchController.Convert_result_to_code(result)
         return jsonify(message = return_state, status = status)
+    
+    def GetTokenFromHeader(bearer:str):
+        if bearer is None:
+            bearer = "Bearer 123"
+        token = bearer.split(' ')[1]
+        return token
+            
     
     def Convert_result_to_code(result:SearchResult):
         if result.__class__ == DataSearchFailed:

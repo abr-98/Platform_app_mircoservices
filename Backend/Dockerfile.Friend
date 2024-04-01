@@ -1,16 +1,15 @@
 FROM python:3.10
 
+WORKDIR /app
 
-RUN mkdir /app
-COPY requirements.txt /app
-COPY appsettings.json /app
-RUN mkdir /app/Utility_Module
-COPY Utility_Module/ /app/Utility_Module/
 RUN mkdir /app/FriendServices
-COPY FriendServices/ /app/FriendServices/
+COPY /FriendServices/ /app/FriendServices/
+RUN mkdir /app/Utility_Module
+COPY /Utility_Module/ /app/Utility_Module/
+RUN mv /app/FriendServices/requirements.txt /app
+RUN mv /app/FriendServices/appsettings.json /app
 RUN mv /app/FriendServices/app.py /app
 
-WORKDIR /app
 
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt

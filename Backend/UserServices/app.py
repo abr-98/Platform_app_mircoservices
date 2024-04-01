@@ -3,6 +3,7 @@ from flask_cors import CORS
 from UserServices.UserController.UserController import app_file_user
 from UserServices.UserController.RegistrationController import app_file_registration
 
+
 app_creator: CreateAppInstance = CreateAppInstanceSingleton.GetInstance()
 app = app_creator.get_app()
 db = app_creator.get_db()

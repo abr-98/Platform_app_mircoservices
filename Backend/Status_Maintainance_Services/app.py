@@ -1,6 +1,9 @@
+import logging
 from Utility_Module.CreateApp import CreateAppInstanceSingleton, CreateAppInstance
 from flask_cors import CORS
 from Status_Maintainance_Services.StatusController.StatusController import app_file_status
+
+
 
 app_creator: CreateAppInstance = CreateAppInstanceSingleton.GetInstance()
 app = app_creator.get_app()

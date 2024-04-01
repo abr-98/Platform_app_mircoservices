@@ -1,10 +1,16 @@
+import logging
 from FriendServices.Core.FriendException import FriendException
 from FriendServices.Core.Friend import Friend,POSSIBLE_STATUSES
 from FriendServices.Core.FriendResult import FriendResult
 from FriendServices.Infrastructure.FriendRepository import FriendRepository
+from Utility_Module.CreateApp import CreateAppInstance, CreateAppInstanceSingleton
 from Utility_Module.JWTHandler import JWTHandler
 from Utility_Module.CheckLoginStatus.StatusException import StatusException
 from Utility_Module.CheckLoginStatus.StatusRequests import StatusRequests
+
+
+app_creater : CreateAppInstance= CreateAppInstanceSingleton.GetInstance()
+logger : logging.Logger = app_creater.get_logger()
 
 class FriendService:
     
@@ -17,6 +23,7 @@ class FriendService:
             if (not self.__IsNotBlocked__(userId,friendId)) or (not self.__IsNotBlocked__(friendId, userId)):
                 return FriendResult.WhenFriendRequestFailed(FriendException.WhenRequestedUserIsBlocked(userId, friendId))
             self.FriendRepository.addFriend(userId,friendId)
+            logger.info(f"{userId} connection request {friendId}")
             return FriendResult.WhenFriendRequestSent(userId, friendId)
         except Exception as e:
             return FriendResult.WhenFriendRequestFailed(e)
@@ -25,6 +32,7 @@ class FriendService:
         try:
             userId = self.check_login_and_token(token_in, IP)
             self.FriendRepository.confirmFriend(userId,friendId)
+            logger.info(f"{userId} confirm request {friendId}")
             return FriendResult.WhenFriendConfirmed(userId, friendId)
         except Exception as e:
             return FriendResult.WhenFriendRequestFailed(e)
@@ -33,6 +41,7 @@ class FriendService:
         try:
             userId = self.check_login_and_token(token_in, IP)
             self.FriendRepository.blockFriend(userId,friendId)
+            logger.info(f"{userId} block {friendId}")
             return FriendResult.WhenFriendBlocked(userId, friendId)
         except Exception as e:
             return FriendResult.WhenFriendRequestFailed(e)
@@ -41,6 +50,7 @@ class FriendService:
         try:
             userId = self.check_login_and_token(token_in, IP)
             self.FriendRepository.removeFriend(userId, friendId)
+            logger.info(f"{userId} remove {friendId}")
             return FriendResult.WhenFriendRemoved(userId, friendId)
         except Exception as e:
             return FriendResult.WhenFriendRequestFailed(e)
@@ -49,6 +59,7 @@ class FriendService:
         try:
             userId = self.check_login_and_token(token_in, IP)
             self.FriendRepository.unblockFriend(userId, friendId)
+            logger.info(f"{userId} unblock {friendId}")
             return FriendResult.WhenFriendIsUnblocked(userId, friendId)
         except Exception as e:
             return FriendResult.WhenFriendRequestFailed(e)

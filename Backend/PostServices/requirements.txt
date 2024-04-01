@@ -1,0 +1,14 @@
+flask==2.3.0
+psycopg2
+Flask-SQLAlchemy>=2.5.1
+Flask-API
+flask-cors
+flask-rest-jsonapi
+flask_restful
+Werkzeug==2.3.0
+pyjwt
+requests
+bcrypt
+boto3
+boto3-stubs[s3]
+redis
